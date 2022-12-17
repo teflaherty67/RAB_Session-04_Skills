@@ -27,8 +27,35 @@ namespace RAB_Session_04_Skills
 
             IList<Element> pickList = uidoc.Selection.PickElementsByRectangle("Select elements");
 
-            TaskDialog.Show("Results", "You selected " + pickList.Count.ToString() + " elements");
+            List<CurveElement> lineList = new List<CurveElement>();
+            
+            foreach(Element element in pickList)
+            {
+                if(element is CurveElement)
+                {
+                    CurveElement curve = (CurveElement)element;
 
+                    if(curve.CurveElementType == CurveElementType.ModelCurve)
+                        lineList.Add(curve);
+                }
+            }
+
+            Transaction t = new Transaction(doc);
+            t.Start("Create wall");
+
+            Level newLevel = Level.Create(doc, 15);
+            foreach (CurveElement curCurve in lineList)
+            {
+                Curve curve = curCurve.GeometryCurve;
+
+                Wall newWall = Wall.Create(doc, curve, newLevel.Id, false);
+            }
+
+            t.Commit();
+            t.Dispose();
+
+            TaskDialog.Show("Results", "I have " + lineList.Count + " lines.");
+            
             return Result.Succeeded;
         }
     }
