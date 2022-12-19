@@ -2,6 +2,7 @@
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Plumbing;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using System;
@@ -44,11 +45,24 @@ namespace RAB_Session_04_Skills
             t.Start("Create wall");
 
             Level newLevel = Level.Create(doc, 15);
+            WallType curWT = Utils.GetWallTypeByName(doc, "Storefront");
+
+            MEPSystemType pipeSystemType = Utils.GetMEPSystemTypeByName(doc, "Domestic Hot Water");
+            PipeType pipeType = Utils.GetPipeTypeByName(doc, "Default");
+            
             foreach (CurveElement curCurve in lineList)
             {
-                Curve curve = curCurve.GeometryCurve;
+                GraphicsStyle curGS = curCurve.LineStyle as GraphicsStyle;
+                Debug.Print(curGS.Name);
 
-                Wall newWall = Wall.Create(doc, curve, newLevel.Id, false);
+                Curve curve = curCurve.GeometryCurve;
+                XYZ startPoint = curve.GetEndPoint(0);
+                XYZ endPoint = curve.GetEndPoint(1);
+
+                // Wall newWall = Wall.Create(doc, curve, curWT.Id, newLevel.Id, 20, 0, false, false);
+
+                Pipe newPipe = Pipe.Create(doc, pipeSystemType.Id, pipeType.Id, newLevel.Id, startPoint, endPoint);
+
             }
 
             t.Commit();
@@ -58,5 +72,7 @@ namespace RAB_Session_04_Skills
             
             return Result.Succeeded;
         }
+
+        
     }
 }
