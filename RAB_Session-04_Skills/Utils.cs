@@ -7,6 +7,7 @@ using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Plumbing;
+using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 
@@ -51,6 +52,20 @@ namespace RAB_Session_04_Skills
             {
                 if (curPT.Name == pipeType)
                     return curPT;
+            }
+
+            return null;
+        }
+
+        internal static DuctType GetDuctTypeByName(Document doc, string ductType)
+        {
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfClass(typeof(DuctType));
+
+            foreach (DuctType curDT in collector)
+            {
+                if (curDT.Name == ductType)
+                    return curDT;
             }
 
             return null;

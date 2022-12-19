@@ -3,6 +3,7 @@ using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Plumbing;
+using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using System;
@@ -49,6 +50,9 @@ namespace RAB_Session_04_Skills
 
             MEPSystemType pipeSystemType = Utils.GetMEPSystemTypeByName(doc, "Domestic Hot Water");
             PipeType pipeType = Utils.GetPipeTypeByName(doc, "Default");
+
+            MEPSystemType ductSystemType = Utils.GetMEPSystemTypeByName(doc, "Supply Air");
+            DuctType ductType = Utils.GetDuctTypeByName(doc, "Default");
             
             foreach (CurveElement curCurve in lineList)
             {
@@ -61,7 +65,9 @@ namespace RAB_Session_04_Skills
 
                 // Wall newWall = Wall.Create(doc, curve, curWT.Id, newLevel.Id, 20, 0, false, false);
 
-                Pipe newPipe = Pipe.Create(doc, pipeSystemType.Id, pipeType.Id, newLevel.Id, startPoint, endPoint);
+                // Pipe newPipe = Pipe.Create(doc, pipeSystemType.Id, pipeType.Id, newLevel.Id, startPoint, endPoint);
+
+                Duct newDuct = Duct.Create(doc, ductSystemType.Id, ductType.Id, newLevel.Id, startPoint, endPoint);
 
             }
 
